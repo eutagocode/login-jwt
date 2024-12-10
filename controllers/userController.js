@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
-import User from "../models/User.js";
 import jwt from "jsonwebtoken";
+import User from "../models/User.js";
 
 const register = async (req, res) => {
     const selectedUser = await User.findOne({ email: req.body.email });
@@ -33,10 +33,12 @@ const login = async (req, res) => {
     if (!passwordAndUserMatch)
         return res.status(400).send("E-mail or Password incorrect.");
 
-    const token = jwt.sign({ _id: selectedUser._id }, process.env.TOKEN_SECRET);
+    const token = await jwt.sign(
+        { _id: selectedUser.id, admin: selectedUser.admin },
+        process.env.TOKEN_SECRET,
+    );
 
-    res.header("authorization-token", token);
-
+    res.header("auth-token", token);
     res.send("User logged");
 };
 
