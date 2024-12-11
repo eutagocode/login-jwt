@@ -10,4 +10,8 @@ router.get("/", auth, (req, res) => {
     }
 });
 
+router.get("/free", auth, (req, res) => {
+    res.send("Esse dado só pode ser visto por quem está logado");
+});
+
 export default router;
